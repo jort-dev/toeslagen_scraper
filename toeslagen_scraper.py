@@ -1,15 +1,16 @@
 import asyncio
 import re
-import tkinter as tk
+import os
+from datetime import datetime
 
-from playwright.async_api import async_playwright
+from playwright.async_api import async_playwright, expect
 
 from test.test_gegevens import vul_test_gegevens_in
 
-STEP = 50  # euros
+EURO_STAP_GROOTTE = 50
 
 
-def get_result(results, tag):
+def get_toeslag(results, tag):
     for str in results:
         if tag not in str:
             continue
@@ -21,7 +22,7 @@ def get_result(results, tag):
         return extracted_number
 
 
-async def get_results(page):
+async def get_toeslagen(page):
     locator = page.locator("#divE3_pbt")
     strong_locators = locator.locator("strong")
     strong_locators = await strong_locators.all()
@@ -33,8 +34,17 @@ async def get_results(page):
     return results
 
 
-def write_results(huurtoeslag, zorgtoeslag, kinderopvangtoeslag, kindergevonden_budget):
-    pass
+async def get_inkomen(page):
+    locator = page.locator("#V3-10_pbt")
+    inkomen = await locator.input_value()
+    inkomen = inkomen.replace(".", "")
+    return int(inkomen)
+
+
+def schrijf_resultaten(filename, inkomen, huurtoeslag, zorgtoeslag, kinderopvangtoeslag, kindergevonden_budget):
+    with open(filename, "a") as file:
+        line = f"{inkomen},{huurtoeslag},{zorgtoeslag},{kinderopvangtoeslag},{kindergevonden_budget}"
+        file.write(line + "\n")
 
 
 async def main():
@@ -49,38 +59,46 @@ async def main():
 
         await vul_test_gegevens_in(page)  # TEST
 
-        print(f"Resultaten ophalen")
-        results = await get_results(page)
-        print(results)
+        print(f"Het script start wanneer je op 'Toon resultaten' drukt")
+        button = page.locator("#butResults_pbt")
+        await expect(button).to_be_hidden()
 
-        zorgtoeslag = get_result(results, "zorgtoeslag")
-        huurtoeslag = get_result(results, "huurtoeslag")
-        kinderopvangtoeslag = get_result(results, "kinderopvangtoeslag")
-        kindergebonden_budget = get_result(results, "kindgebonden budget")
-        print(f"{zorgtoeslag=}, {huurtoeslag=}, {kinderopvangtoeslag=}, {kindergebonden_budget=}")
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        resultaat_bestand_path = f"resultaten/toeslagen_{timestamp}.csv"
+        os.makedirs("resultaten", exist_ok=True)  # maak resultaat folder aan als het nog niet bestaat
+        schrijf_resultaten(timestamp, "inkomen", "huurtoeslag", "zorgtoeslag", "kinderopvangtoeslag", "kindergevonden_budget")
+        print(f"Gestart! Resultaten worden geschreven naar {resultaat_bestand_path}")
 
-        print(f"Start berekening vanaf: {inkomen}")
         while True:
-            inkomen += STEP
+            # haal toeslag resultaten op
+            inkomen = await get_inkomen(page)
+            toeslagen_text = await get_toeslagen(page)
+            zorgtoeslag = get_toeslag(toeslagen_text, "zorgtoeslag")
+            huurtoeslag = get_toeslag(toeslagen_text, "huurtoeslag")
+            kinderopvangtoeslag = get_toeslag(toeslagen_text, "kinderopvangtoeslag")
+            kindergebonden_budget = get_toeslag(toeslagen_text, "kindgebonden budget")
 
-            # wijzig invoer
-            await page.evaluate("window.scrollTo(0, 0)")
+            # schrijf resultaten weg
+            print(f"{inkomen=}: {zorgtoeslag=}, {huurtoeslag=}, {kinderopvangtoeslag=}, {kindergebonden_budget=}")
+            schrijf_resultaten(timestamp, inkomen, zorgtoeslag, huurtoeslag, kinderopvangtoeslag, kindergebonden_budget)
+
+            # klik 'Wijzig invoer'
             locator = page.locator("#butWijzig_pbt")
             await locator.click()
 
-            await instant_fill_field(page, "#V3-10_pbt", str(inkomen))
+            # voer een verhoogd inkomen in
+            inkomen += EURO_STAP_GROOTTE
+            locator = page.locator("#V3-10_pbt")
+            inkomen = str(inkomen)
+            await locator.fill(inkomen[:-1])
+            # als we het laatste cijfer niet 'handmatig' typen, heeft de berekening de nieuwe waarde niet door
+            await locator.type(inkomen[-1], delay=33)
 
-            await page.evaluate("window.scrollTo(0, 0)")
+            # klik 'Toon resultaten'
             locator = page.locator("#butResults_pbt")
             await locator.click()
 
-            results = await get_results(page)
-            zorgtoeslag = get_result(results, "zorgtoeslag")
-            huurtoeslag = get_result(results, "huurtoeslag")
-            kinderopvangtoeslag = get_result(results, "kinderopvangtoeslag")
-            kindergebonden_budget = get_result(results, "kindgebonden budget")
-            print(f"{inkomen=}: {zorgtoeslag=}, {huurtoeslag=}, {kinderopvangtoeslag=}, {kindergebonden_budget=}")
-            await asyncio.sleep(2)
+            # await asyncio.sleep()
 
         print(f"Klaar")
         while True:
