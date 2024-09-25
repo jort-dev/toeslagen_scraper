@@ -30,6 +30,7 @@ def get_toeslag(results, tag):
             continue
         extracted_number = match.group(1)
         return extracted_number
+    return "0"
 
 
 async def get_toeslagen(page):
@@ -55,6 +56,11 @@ def schrijf_resultaten(filename, inkomen, huurtoeslag, zorgtoeslag, kinderopvang
     with open(filename, "a") as file:
         line = f"{inkomen},{huurtoeslag},{zorgtoeslag},{kinderopvangtoeslag},{kindergevonden_budget}"
         file.write(line + "\n")
+    inkomen_var.set(str(inkomen))
+    zorgtoeslag_var.set(str(zorgtoeslag))
+    huurtoeslag_var.set(str(huurtoeslag))
+    kinderopvangtoeslag_var.set(str(kinderopvangtoeslag))
+    kindergebonden_budget_var.set(str(kindergevonden_budget))
 
 
 # Function to validate and update stapgrootte
@@ -166,8 +172,9 @@ def toggle_pause():
 
 def stop_process():
     stop_event.set()
-    if pause_event.is_set():
-        pause_event.clear()
+    pause_event.set()
+    stop_button.config(state=tk.DISABLED)
+    pause_button.config(state=tk.DISABLED)
 
 
 def on_escape(event):
@@ -182,8 +189,8 @@ def open_github():
 # Main window
 root = tk.Tk()
 root.title("Toeslagen scraper")
-root.geometry("400x300")
-root.resizable(False, False)
+root.geometry("500x500")
+# root.resizable(False, False)
 root.bind("<Escape>", on_escape)
 tooltip_delay = 200
 
@@ -214,21 +221,26 @@ stapgrootte_entry.insert(0, "50")
 # stapgrootte_entry.bind("<FocusOut>", update_stapgrootte)
 stapgrootte_entry.bind("<KeyRelease>", update_stapgrootte)
 
-tooltip = "Het script verhoogt steeds het inkomen met dit bedrag"
-Hovertip(stapgrootte_entry, tooltip, hover_delay=tooltip_delay)
+Hovertip(stapgrootte_entry, "Het script verhoogt steeds het inkomen met dit bedrag", hover_delay=tooltip_delay)
 
-# Values display area
-values_frame = tk.Frame(root)
-values_frame.pack(pady=10)
-
-salaris_label = tk.Label(values_frame, text="Salaris:")
-salaris_label.grid(row=0, column=0, padx=5)
-
-huurtoeslag_label = tk.Label(values_frame, text="Huurtoeslag:")
-huurtoeslag_label.grid(row=0, column=1, padx=5)
-
-zorgtoeslag_label = tk.Label(values_frame, text="Zorgtoeslag:")
-zorgtoeslag_label.grid(row=0, column=2, padx=5)
+# tussentijdse waardes tabel
+table_frame = tk.Frame(root)
+table_frame.pack(pady=10)
+inkomen_var = tk.StringVar(value="0")
+zorgtoeslag_var = tk.StringVar(value=f"0")
+huurtoeslag_var = tk.StringVar(value=f"0")
+kinderopvangtoeslag_var = tk.StringVar(value=f"0")
+kindergebonden_budget_var = tk.StringVar(value=f"0")
+labels = [
+    ("Salaris", inkomen_var),
+    ("Zorgtoeslag", zorgtoeslag_var),
+    ("Huurtoeslag", huurtoeslag_var),
+    ("Kinderopvangtoeslag", kinderopvangtoeslag_var),
+    ("Kindergebonden budget", kindergebonden_budget_var),
+]
+for i, (text, var) in enumerate(labels):  # chatgpt bro
+    tk.Label(table_frame, text=text).grid(row=i, column=0, padx=10, pady=5, sticky="w")
+    tk.Entry(table_frame, textvariable=var, state="readonly").grid(row=i, column=1, padx=10, pady=5)
 
 # Buttons frame
 buttons_frame = tk.Frame(root)
