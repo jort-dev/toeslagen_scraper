@@ -1,1 +1,4 @@
-playwright
+playwright # om de browser te besturen met de calculator
+pandas # plotten
+matplotlib # plotten
+mpld3 # interactieve plots

@@ -2,3 +2,4 @@
 venv/
 resultaten/
 *.pyc
+__pycache__/

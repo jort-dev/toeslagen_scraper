@@ -3,6 +3,7 @@ import re
 import os
 from datetime import datetime
 
+
 from playwright.async_api import async_playwright, expect
 
 from test.test_gegevens import vul_test_gegevens_in

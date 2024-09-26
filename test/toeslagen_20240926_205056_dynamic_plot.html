@@ -1,0 +1,166 @@
+
+
+<style>
+
+</style>
+
+<div id="fig_el965213652632936961690556048"></div>
+<script>
+function mpld3_load_lib(url, callback){
+  var s = document.createElement('script');
+  s.src = url;
+  s.async = true;
+  s.onreadystatechange = s.onload = callback;
+  s.onerror = function(){console.warn("failed to load library " + url);};
+  document.getElementsByTagName("head")[0].appendChild(s);
+}
+
+if(typeof(mpld3) !== "undefined" && mpld3._mpld3IsLoaded){
+   // already loaded: just create the figure
+   !function(mpld3){
+       
+    mpld3.register_plugin("htmltooltip", HtmlTooltipPlugin);
+    HtmlTooltipPlugin.prototype = Object.create(mpld3.Plugin.prototype);
+    HtmlTooltipPlugin.prototype.constructor = HtmlTooltipPlugin;
+    HtmlTooltipPlugin.prototype.requiredProps = ["id"];
+    HtmlTooltipPlugin.prototype.defaultProps = {labels:null,
+                                                target:null,
+                                                hoffset:0,
+                                                voffset:10,
+                                                targets:null};
+    function HtmlTooltipPlugin(fig, props){
+        mpld3.Plugin.call(this, fig, props);
+    };
+
+    HtmlTooltipPlugin.prototype.draw = function(){
+        var obj = mpld3.get_element(this.props.id);
+        var labels = this.props.labels;
+        var targets = this.props.targets;
+        var tooltip = d3.select("body").append("div")
+            .attr("class", "mpld3-tooltip")
+            .style("position", "absolute")
+            .style("z-index", "10")
+            .style("visibility", "hidden");
+
+        obj.elements()
+            .on("mouseover", function(d, i){
+                tooltip.html(labels[i])
+                    .style("visibility", "visible");
+            })
+            .on("mousemove", function(d, i){
+                tooltip
+                .style("top", d3.event.pageY + this.props.voffset + "px")
+                .style("left",d3.event.pageX + this.props.hoffset + "px");
+            }.bind(this))
+            .on("mousedown.callout", function(d, i){
+                window.open(targets[i],"_blank");
+            })
+            .on("mouseout", function(d, i){
+                tooltip.style("visibility", "hidden");
+            });
+    };
+    
+       mpld3.draw_figure("fig_el965213652632936961690556048", {"width": 1000.0, "height": 600.0, "axes": [{"bbox": [0.125, 0.10999999999999999, 0.775, 0.77], "xlim": [35877.5, 38572.5], "ylim": [-0.9500000000000001, 19.95], "xdomain": [35877.5, 38572.5], "ydomain": [-0.9500000000000001, 19.95], "xscale": "linear", "yscale": "linear", "axes": [{"position": "bottom", "nticks": 8, "tickvalues": null, "tickformat_formatter": "", "tickformat": null, "scale": "linear", "fontsize": 10.0, "grid": {"gridOn": true, "color": "#B0B0B0", "dasharray": "none", "alpha": 1.0}, "visible": true}, {"position": "left", "nticks": 10, "tickvalues": null, "tickformat_formatter": "", "tickformat": null, "scale": "linear", "fontsize": 10.0, "grid": {"gridOn": true, "color": "#B0B0B0", "dasharray": "none", "alpha": 1.0}, "visible": true}], "axesbg": "#FFFFFF", "axesbgalpha": null, "zoomable": true, "id": "el96521365267809728", "lines": [{"data": "data01", "xindex": 0, "yindex": 1, "coordinates": "data", "id": "el96521365268006288", "color": "#1F77B4", "linewidth": 2.0, "dasharray": "none", "alpha": 1, "zorder": 2, "drawstyle": "default"}, {"data": "data02", "xindex": 0, "yindex": 1, "coordinates": "axes", "id": "el96521365267810496", "color": "#1F77B4", "linewidth": 2.0, "dasharray": "none", "alpha": 1, "zorder": 2000002.0, "drawstyle": "default"}], "paths": [{"data": "data03", "xindex": 0, "yindex": 1, "coordinates": "axes", "pathcodes": ["M", "L", "S", "L", "S", "L", "S", "L", "S", "Z"], "id": "el96521365268011664", "dasharray": "none", "alpha": 0.8, "facecolor": "rgba(255, 255, 255, 0.8)", "edgecolor": "rgba(204, 204, 204, 0.8)", "edgewidth": 1.0, "zorder": 1999999.0}], "markers": [], "texts": [{"text": "Inkomen", "position": [0.5, -0.06337181337181337], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "hanging", "rotation": -0.0, "fontsize": 10.0, "color": "#000000", "alpha": 1, "zorder": 3, "id": "el96521365267811456"}, {"text": "Toeslag", "position": [-0.05939068100358423, 0.5], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "auto", "rotation": -90.0, "fontsize": 10.0, "color": "#000000", "alpha": 1, "zorder": 3, "id": "el96521365267812176"}, {"text": "Toeslagen vs Inkomen", "position": [0.5, 1.018037518037518], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "auto", "rotation": -0.0, "fontsize": 12.0, "color": "#000000", "alpha": 1, "zorder": 3, "id": "el96521365267818464"}, {"text": "Huurtoeslag", "position": [0.8746774193548387, 0.9491341991341993], "coordinates": "axes", "h_anchor": "start", "v_baseline": "auto", "rotation": -0.0, "fontsize": 10.0, "color": "#000000", "alpha": 1, "zorder": 2000003.0, "id": "el96521365268012288"}], "collections": [{"offsets": "data01", "xindex": 0, "yindex": 1, "paths": [[[[0.0, -0.5], [0.13260155, -0.5], [0.25978993539242673, -0.44731684579412084], [0.3535533905932738, -0.3535533905932738], [0.44731684579412084, -0.25978993539242673], [0.5, -0.13260155], [0.5, 0.0], [0.5, 0.13260155], [0.44731684579412084, 0.25978993539242673], [0.3535533905932738, 0.3535533905932738], [0.25978993539242673, 0.44731684579412084], [0.13260155, 0.5], [0.0, 0.5], [-0.13260155, 0.5], [-0.25978993539242673, 0.44731684579412084], [-0.3535533905932738, 0.3535533905932738], [-0.44731684579412084, 0.25978993539242673], [-0.5, 0.13260155], [-0.5, 0.0], [-0.5, -0.13260155], [-0.44731684579412084, -0.25978993539242673], [-0.3535533905932738, -0.3535533905932738], [-0.25978993539242673, -0.44731684579412084], [-0.13260155, -0.5], [0.0, -0.5]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]]], "pathtransforms": [[13.88888888888889, 0.0, 0.0, 13.88888888888889, 0.0, 0.0]], "alphas": [0.6], "edgecolors": ["rgba(31, 119, 180, 0.6)"], "facecolors": ["rgba(31, 119, 180, 0.6)"], "edgewidths": [1.0], "offsetcoordinates": "data", "pathcoordinates": "display", "zorder": 1, "id": "el96521365268009312"}], "images": [], "sharex": [], "sharey": []}], "data": {"data01": [[36000.0, 19.0], [36050.0, 18.0], [36100.0, 17.0], [36150.0, 17.0], [36200.0, 16.0], [36250.0, 16.0], [36300.0, 15.0], [36350.0, 15.0], [36400.0, 14.0], [36450.0, 13.0], [36500.0, 13.0], [36550.0, 12.0], [36600.0, 12.0], [36650.0, 11.0], [36700.0, 11.0], [36750.0, 10.0], [36800.0, 9.0], [36850.0, 9.0], [36900.0, 8.0], [36950.0, 8.0], [37000.0, 7.0], [37050.0, 7.0], [37100.0, 6.0], [37150.0, 5.0], [37200.0, 5.0], [37250.0, 4.0], [37300.0, 4.0], [37350.0, 3.0], [37400.0, 3.0], [37450.0, 2.0], [37500.0, 0.0], [37550.0, 0.0], [37600.0, 0.0], [37650.0, 0.0], [37700.0, 0.0], [37750.0, 0.0], [37800.0, 0.0], [37850.0, 0.0], [37900.0, 0.0], [37950.0, 0.0], [38000.0, 0.0], [38050.0, 0.0], [38100.0, 0.0], [38150.0, 0.0], [38200.0, 0.0], [38250.0, 0.0], [38300.0, 0.0], [38350.0, 0.0], [38400.0, 0.0], [38450.0, 0.0]], "data02": [[0.8244982078853047, 0.9596560846560848], [0.8424193548387097, 0.9596560846560848], [0.8603405017921147, 0.9596560846560848]], "data03": [[0.8209139784946238, 0.9306156806156807], [0.9874551971326165, 0.9306156806156807], [0.9910394265232975, 0.9306156806156807], [0.9910394265232975, 0.9366281866281867], [0.9910394265232975, 0.9789562289562288], [0.9910394265232975, 0.984968734968735], [0.9874551971326165, 0.984968734968735], [0.8209139784946238, 0.984968734968735], [0.8173297491039426, 0.984968734968735], [0.8173297491039426, 0.9789562289562288], [0.8173297491039426, 0.9366281866281867], [0.8173297491039426, 0.9306156806156807], [0.8209139784946238, 0.9306156806156807]]}, "id": "el96521365263293696", "plugins": [{"type": "reset"}, {"type": "zoom", "button": true, "enabled": false}, {"type": "boxzoom", "button": true, "enabled": false}, {"type": "htmltooltip", "id": "el96521365268009312", "labels": ["<strong>Huurtoeslag</strong><br>Inkomen: 36000<br>Toeslag: 19", "<strong>Huurtoeslag</strong><br>Inkomen: 36050<br>Toeslag: 18", "<strong>Huurtoeslag</strong><br>Inkomen: 36100<br>Toeslag: 17", "<strong>Huurtoeslag</strong><br>Inkomen: 36150<br>Toeslag: 17", "<strong>Huurtoeslag</strong><br>Inkomen: 36200<br>Toeslag: 16", "<strong>Huurtoeslag</strong><br>Inkomen: 36250<br>Toeslag: 16", "<strong>Huurtoeslag</strong><br>Inkomen: 36300<br>Toeslag: 15", "<strong>Huurtoeslag</strong><br>Inkomen: 36350<br>Toeslag: 15", "<strong>Huurtoeslag</strong><br>Inkomen: 36400<br>Toeslag: 14", "<strong>Huurtoeslag</strong><br>Inkomen: 36450<br>Toeslag: 13", "<strong>Huurtoeslag</strong><br>Inkomen: 36500<br>Toeslag: 13", "<strong>Huurtoeslag</strong><br>Inkomen: 36550<br>Toeslag: 12", "<strong>Huurtoeslag</strong><br>Inkomen: 36600<br>Toeslag: 12", "<strong>Huurtoeslag</strong><br>Inkomen: 36650<br>Toeslag: 11", "<strong>Huurtoeslag</strong><br>Inkomen: 36700<br>Toeslag: 11", "<strong>Huurtoeslag</strong><br>Inkomen: 36750<br>Toeslag: 10", "<strong>Huurtoeslag</strong><br>Inkomen: 36800<br>Toeslag: 9", "<strong>Huurtoeslag</strong><br>Inkomen: 36850<br>Toeslag: 9", "<strong>Huurtoeslag</strong><br>Inkomen: 36900<br>Toeslag: 8", "<strong>Huurtoeslag</strong><br>Inkomen: 36950<br>Toeslag: 8", "<strong>Huurtoeslag</strong><br>Inkomen: 37000<br>Toeslag: 7", "<strong>Huurtoeslag</strong><br>Inkomen: 37050<br>Toeslag: 7", "<strong>Huurtoeslag</strong><br>Inkomen: 37100<br>Toeslag: 6", "<strong>Huurtoeslag</strong><br>Inkomen: 37150<br>Toeslag: 5", "<strong>Huurtoeslag</strong><br>Inkomen: 37200<br>Toeslag: 5", "<strong>Huurtoeslag</strong><br>Inkomen: 37250<br>Toeslag: 4", "<strong>Huurtoeslag</strong><br>Inkomen: 37300<br>Toeslag: 4", "<strong>Huurtoeslag</strong><br>Inkomen: 37350<br>Toeslag: 3", "<strong>Huurtoeslag</strong><br>Inkomen: 37400<br>Toeslag: 3", "<strong>Huurtoeslag</strong><br>Inkomen: 37450<br>Toeslag: 2", "<strong>Huurtoeslag</strong><br>Inkomen: 37500<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37550<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37600<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37650<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37700<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37750<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37800<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37850<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37900<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37950<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38000<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38050<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38100<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38150<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38200<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38250<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38300<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38350<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38400<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38450<br>Toeslag: 0"], "targets": null, "hoffset": 10, "voffset": 10}]});
+   }(mpld3);
+}else if(typeof define === "function" && define.amd){
+   // require.js is available: use it to load d3/mpld3
+   require.config({paths: {d3: "https://d3js.org/d3.v5"}});
+   require(["d3"], function(d3){
+      window.d3 = d3;
+      mpld3_load_lib("https://mpld3.github.io/js/mpld3.v0.5.10.js", function(){
+         
+    mpld3.register_plugin("htmltooltip", HtmlTooltipPlugin);
+    HtmlTooltipPlugin.prototype = Object.create(mpld3.Plugin.prototype);
+    HtmlTooltipPlugin.prototype.constructor = HtmlTooltipPlugin;
+    HtmlTooltipPlugin.prototype.requiredProps = ["id"];
+    HtmlTooltipPlugin.prototype.defaultProps = {labels:null,
+                                                target:null,
+                                                hoffset:0,
+                                                voffset:10,
+                                                targets:null};
+    function HtmlTooltipPlugin(fig, props){
+        mpld3.Plugin.call(this, fig, props);
+    };
+
+    HtmlTooltipPlugin.prototype.draw = function(){
+        var obj = mpld3.get_element(this.props.id);
+        var labels = this.props.labels;
+        var targets = this.props.targets;
+        var tooltip = d3.select("body").append("div")
+            .attr("class", "mpld3-tooltip")
+            .style("position", "absolute")
+            .style("z-index", "10")
+            .style("visibility", "hidden");
+
+        obj.elements()
+            .on("mouseover", function(d, i){
+                tooltip.html(labels[i])
+                    .style("visibility", "visible");
+            })
+            .on("mousemove", function(d, i){
+                tooltip
+                .style("top", d3.event.pageY + this.props.voffset + "px")
+                .style("left",d3.event.pageX + this.props.hoffset + "px");
+            }.bind(this))
+            .on("mousedown.callout", function(d, i){
+                window.open(targets[i],"_blank");
+            })
+            .on("mouseout", function(d, i){
+                tooltip.style("visibility", "hidden");
+            });
+    };
+    
+         mpld3.draw_figure("fig_el965213652632936961690556048", {"width": 1000.0, "height": 600.0, "axes": [{"bbox": [0.125, 0.10999999999999999, 0.775, 0.77], "xlim": [35877.5, 38572.5], "ylim": [-0.9500000000000001, 19.95], "xdomain": [35877.5, 38572.5], "ydomain": [-0.9500000000000001, 19.95], "xscale": "linear", "yscale": "linear", "axes": [{"position": "bottom", "nticks": 8, "tickvalues": null, "tickformat_formatter": "", "tickformat": null, "scale": "linear", "fontsize": 10.0, "grid": {"gridOn": true, "color": "#B0B0B0", "dasharray": "none", "alpha": 1.0}, "visible": true}, {"position": "left", "nticks": 10, "tickvalues": null, "tickformat_formatter": "", "tickformat": null, "scale": "linear", "fontsize": 10.0, "grid": {"gridOn": true, "color": "#B0B0B0", "dasharray": "none", "alpha": 1.0}, "visible": true}], "axesbg": "#FFFFFF", "axesbgalpha": null, "zoomable": true, "id": "el96521365267809728", "lines": [{"data": "data01", "xindex": 0, "yindex": 1, "coordinates": "data", "id": "el96521365268006288", "color": "#1F77B4", "linewidth": 2.0, "dasharray": "none", "alpha": 1, "zorder": 2, "drawstyle": "default"}, {"data": "data02", "xindex": 0, "yindex": 1, "coordinates": "axes", "id": "el96521365267810496", "color": "#1F77B4", "linewidth": 2.0, "dasharray": "none", "alpha": 1, "zorder": 2000002.0, "drawstyle": "default"}], "paths": [{"data": "data03", "xindex": 0, "yindex": 1, "coordinates": "axes", "pathcodes": ["M", "L", "S", "L", "S", "L", "S", "L", "S", "Z"], "id": "el96521365268011664", "dasharray": "none", "alpha": 0.8, "facecolor": "rgba(255, 255, 255, 0.8)", "edgecolor": "rgba(204, 204, 204, 0.8)", "edgewidth": 1.0, "zorder": 1999999.0}], "markers": [], "texts": [{"text": "Inkomen", "position": [0.5, -0.06337181337181337], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "hanging", "rotation": -0.0, "fontsize": 10.0, "color": "#000000", "alpha": 1, "zorder": 3, "id": "el96521365267811456"}, {"text": "Toeslag", "position": [-0.05939068100358423, 0.5], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "auto", "rotation": -90.0, "fontsize": 10.0, "color": "#000000", "alpha": 1, "zorder": 3, "id": "el96521365267812176"}, {"text": "Toeslagen vs Inkomen", "position": [0.5, 1.018037518037518], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "auto", "rotation": -0.0, "fontsize": 12.0, "color": "#000000", "alpha": 1, "zorder": 3, "id": "el96521365267818464"}, {"text": "Huurtoeslag", "position": [0.8746774193548387, 0.9491341991341993], "coordinates": "axes", "h_anchor": "start", "v_baseline": "auto", "rotation": -0.0, "fontsize": 10.0, "color": "#000000", "alpha": 1, "zorder": 2000003.0, "id": "el96521365268012288"}], "collections": [{"offsets": "data01", "xindex": 0, "yindex": 1, "paths": [[[[0.0, -0.5], [0.13260155, -0.5], [0.25978993539242673, -0.44731684579412084], [0.3535533905932738, -0.3535533905932738], [0.44731684579412084, -0.25978993539242673], [0.5, -0.13260155], [0.5, 0.0], [0.5, 0.13260155], [0.44731684579412084, 0.25978993539242673], [0.3535533905932738, 0.3535533905932738], [0.25978993539242673, 0.44731684579412084], [0.13260155, 0.5], [0.0, 0.5], [-0.13260155, 0.5], [-0.25978993539242673, 0.44731684579412084], [-0.3535533905932738, 0.3535533905932738], [-0.44731684579412084, 0.25978993539242673], [-0.5, 0.13260155], [-0.5, 0.0], [-0.5, -0.13260155], [-0.44731684579412084, -0.25978993539242673], [-0.3535533905932738, -0.3535533905932738], [-0.25978993539242673, -0.44731684579412084], [-0.13260155, -0.5], [0.0, -0.5]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]]], "pathtransforms": [[13.88888888888889, 0.0, 0.0, 13.88888888888889, 0.0, 0.0]], "alphas": [0.6], "edgecolors": ["rgba(31, 119, 180, 0.6)"], "facecolors": ["rgba(31, 119, 180, 0.6)"], "edgewidths": [1.0], "offsetcoordinates": "data", "pathcoordinates": "display", "zorder": 1, "id": "el96521365268009312"}], "images": [], "sharex": [], "sharey": []}], "data": {"data01": [[36000.0, 19.0], [36050.0, 18.0], [36100.0, 17.0], [36150.0, 17.0], [36200.0, 16.0], [36250.0, 16.0], [36300.0, 15.0], [36350.0, 15.0], [36400.0, 14.0], [36450.0, 13.0], [36500.0, 13.0], [36550.0, 12.0], [36600.0, 12.0], [36650.0, 11.0], [36700.0, 11.0], [36750.0, 10.0], [36800.0, 9.0], [36850.0, 9.0], [36900.0, 8.0], [36950.0, 8.0], [37000.0, 7.0], [37050.0, 7.0], [37100.0, 6.0], [37150.0, 5.0], [37200.0, 5.0], [37250.0, 4.0], [37300.0, 4.0], [37350.0, 3.0], [37400.0, 3.0], [37450.0, 2.0], [37500.0, 0.0], [37550.0, 0.0], [37600.0, 0.0], [37650.0, 0.0], [37700.0, 0.0], [37750.0, 0.0], [37800.0, 0.0], [37850.0, 0.0], [37900.0, 0.0], [37950.0, 0.0], [38000.0, 0.0], [38050.0, 0.0], [38100.0, 0.0], [38150.0, 0.0], [38200.0, 0.0], [38250.0, 0.0], [38300.0, 0.0], [38350.0, 0.0], [38400.0, 0.0], [38450.0, 0.0]], "data02": [[0.8244982078853047, 0.9596560846560848], [0.8424193548387097, 0.9596560846560848], [0.8603405017921147, 0.9596560846560848]], "data03": [[0.8209139784946238, 0.9306156806156807], [0.9874551971326165, 0.9306156806156807], [0.9910394265232975, 0.9306156806156807], [0.9910394265232975, 0.9366281866281867], [0.9910394265232975, 0.9789562289562288], [0.9910394265232975, 0.984968734968735], [0.9874551971326165, 0.984968734968735], [0.8209139784946238, 0.984968734968735], [0.8173297491039426, 0.984968734968735], [0.8173297491039426, 0.9789562289562288], [0.8173297491039426, 0.9366281866281867], [0.8173297491039426, 0.9306156806156807], [0.8209139784946238, 0.9306156806156807]]}, "id": "el96521365263293696", "plugins": [{"type": "reset"}, {"type": "zoom", "button": true, "enabled": false}, {"type": "boxzoom", "button": true, "enabled": false}, {"type": "htmltooltip", "id": "el96521365268009312", "labels": ["<strong>Huurtoeslag</strong><br>Inkomen: 36000<br>Toeslag: 19", "<strong>Huurtoeslag</strong><br>Inkomen: 36050<br>Toeslag: 18", "<strong>Huurtoeslag</strong><br>Inkomen: 36100<br>Toeslag: 17", "<strong>Huurtoeslag</strong><br>Inkomen: 36150<br>Toeslag: 17", "<strong>Huurtoeslag</strong><br>Inkomen: 36200<br>Toeslag: 16", "<strong>Huurtoeslag</strong><br>Inkomen: 36250<br>Toeslag: 16", "<strong>Huurtoeslag</strong><br>Inkomen: 36300<br>Toeslag: 15", "<strong>Huurtoeslag</strong><br>Inkomen: 36350<br>Toeslag: 15", "<strong>Huurtoeslag</strong><br>Inkomen: 36400<br>Toeslag: 14", "<strong>Huurtoeslag</strong><br>Inkomen: 36450<br>Toeslag: 13", "<strong>Huurtoeslag</strong><br>Inkomen: 36500<br>Toeslag: 13", "<strong>Huurtoeslag</strong><br>Inkomen: 36550<br>Toeslag: 12", "<strong>Huurtoeslag</strong><br>Inkomen: 36600<br>Toeslag: 12", "<strong>Huurtoeslag</strong><br>Inkomen: 36650<br>Toeslag: 11", "<strong>Huurtoeslag</strong><br>Inkomen: 36700<br>Toeslag: 11", "<strong>Huurtoeslag</strong><br>Inkomen: 36750<br>Toeslag: 10", "<strong>Huurtoeslag</strong><br>Inkomen: 36800<br>Toeslag: 9", "<strong>Huurtoeslag</strong><br>Inkomen: 36850<br>Toeslag: 9", "<strong>Huurtoeslag</strong><br>Inkomen: 36900<br>Toeslag: 8", "<strong>Huurtoeslag</strong><br>Inkomen: 36950<br>Toeslag: 8", "<strong>Huurtoeslag</strong><br>Inkomen: 37000<br>Toeslag: 7", "<strong>Huurtoeslag</strong><br>Inkomen: 37050<br>Toeslag: 7", "<strong>Huurtoeslag</strong><br>Inkomen: 37100<br>Toeslag: 6", "<strong>Huurtoeslag</strong><br>Inkomen: 37150<br>Toeslag: 5", "<strong>Huurtoeslag</strong><br>Inkomen: 37200<br>Toeslag: 5", "<strong>Huurtoeslag</strong><br>Inkomen: 37250<br>Toeslag: 4", "<strong>Huurtoeslag</strong><br>Inkomen: 37300<br>Toeslag: 4", "<strong>Huurtoeslag</strong><br>Inkomen: 37350<br>Toeslag: 3", "<strong>Huurtoeslag</strong><br>Inkomen: 37400<br>Toeslag: 3", "<strong>Huurtoeslag</strong><br>Inkomen: 37450<br>Toeslag: 2", "<strong>Huurtoeslag</strong><br>Inkomen: 37500<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37550<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37600<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37650<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37700<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37750<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37800<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37850<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37900<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37950<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38000<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38050<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38100<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38150<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38200<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38250<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38300<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38350<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38400<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38450<br>Toeslag: 0"], "targets": null, "hoffset": 10, "voffset": 10}]});
+      });
+    });
+}else{
+    // require.js not available: dynamically load d3 & mpld3
+    mpld3_load_lib("https://d3js.org/d3.v5.js", function(){
+         mpld3_load_lib("https://mpld3.github.io/js/mpld3.v0.5.10.js", function(){
+                 
+    mpld3.register_plugin("htmltooltip", HtmlTooltipPlugin);
+    HtmlTooltipPlugin.prototype = Object.create(mpld3.Plugin.prototype);
+    HtmlTooltipPlugin.prototype.constructor = HtmlTooltipPlugin;
+    HtmlTooltipPlugin.prototype.requiredProps = ["id"];
+    HtmlTooltipPlugin.prototype.defaultProps = {labels:null,
+                                                target:null,
+                                                hoffset:0,
+                                                voffset:10,
+                                                targets:null};
+    function HtmlTooltipPlugin(fig, props){
+        mpld3.Plugin.call(this, fig, props);
+    };
+
+    HtmlTooltipPlugin.prototype.draw = function(){
+        var obj = mpld3.get_element(this.props.id);
+        var labels = this.props.labels;
+        var targets = this.props.targets;
+        var tooltip = d3.select("body").append("div")
+            .attr("class", "mpld3-tooltip")
+            .style("position", "absolute")
+            .style("z-index", "10")
+            .style("visibility", "hidden");
+
+        obj.elements()
+            .on("mouseover", function(d, i){
+                tooltip.html(labels[i])
+                    .style("visibility", "visible");
+            })
+            .on("mousemove", function(d, i){
+                tooltip
+                .style("top", d3.event.pageY + this.props.voffset + "px")
+                .style("left",d3.event.pageX + this.props.hoffset + "px");
+            }.bind(this))
+            .on("mousedown.callout", function(d, i){
+                window.open(targets[i],"_blank");
+            })
+            .on("mouseout", function(d, i){
+                tooltip.style("visibility", "hidden");
+            });
+    };
+    
+                 mpld3.draw_figure("fig_el965213652632936961690556048", {"width": 1000.0, "height": 600.0, "axes": [{"bbox": [0.125, 0.10999999999999999, 0.775, 0.77], "xlim": [35877.5, 38572.5], "ylim": [-0.9500000000000001, 19.95], "xdomain": [35877.5, 38572.5], "ydomain": [-0.9500000000000001, 19.95], "xscale": "linear", "yscale": "linear", "axes": [{"position": "bottom", "nticks": 8, "tickvalues": null, "tickformat_formatter": "", "tickformat": null, "scale": "linear", "fontsize": 10.0, "grid": {"gridOn": true, "color": "#B0B0B0", "dasharray": "none", "alpha": 1.0}, "visible": true}, {"position": "left", "nticks": 10, "tickvalues": null, "tickformat_formatter": "", "tickformat": null, "scale": "linear", "fontsize": 10.0, "grid": {"gridOn": true, "color": "#B0B0B0", "dasharray": "none", "alpha": 1.0}, "visible": true}], "axesbg": "#FFFFFF", "axesbgalpha": null, "zoomable": true, "id": "el96521365267809728", "lines": [{"data": "data01", "xindex": 0, "yindex": 1, "coordinates": "data", "id": "el96521365268006288", "color": "#1F77B4", "linewidth": 2.0, "dasharray": "none", "alpha": 1, "zorder": 2, "drawstyle": "default"}, {"data": "data02", "xindex": 0, "yindex": 1, "coordinates": "axes", "id": "el96521365267810496", "color": "#1F77B4", "linewidth": 2.0, "dasharray": "none", "alpha": 1, "zorder": 2000002.0, "drawstyle": "default"}], "paths": [{"data": "data03", "xindex": 0, "yindex": 1, "coordinates": "axes", "pathcodes": ["M", "L", "S", "L", "S", "L", "S", "L", "S", "Z"], "id": "el96521365268011664", "dasharray": "none", "alpha": 0.8, "facecolor": "rgba(255, 255, 255, 0.8)", "edgecolor": "rgba(204, 204, 204, 0.8)", "edgewidth": 1.0, "zorder": 1999999.0}], "markers": [], "texts": [{"text": "Inkomen", "position": [0.5, -0.06337181337181337], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "hanging", "rotation": -0.0, "fontsize": 10.0, "color": "#000000", "alpha": 1, "zorder": 3, "id": "el96521365267811456"}, {"text": "Toeslag", "position": [-0.05939068100358423, 0.5], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "auto", "rotation": -90.0, "fontsize": 10.0, "color": "#000000", "alpha": 1, "zorder": 3, "id": "el96521365267812176"}, {"text": "Toeslagen vs Inkomen", "position": [0.5, 1.018037518037518], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "auto", "rotation": -0.0, "fontsize": 12.0, "color": "#000000", "alpha": 1, "zorder": 3, "id": "el96521365267818464"}, {"text": "Huurtoeslag", "position": [0.8746774193548387, 0.9491341991341993], "coordinates": "axes", "h_anchor": "start", "v_baseline": "auto", "rotation": -0.0, "fontsize": 10.0, "color": "#000000", "alpha": 1, "zorder": 2000003.0, "id": "el96521365268012288"}], "collections": [{"offsets": "data01", "xindex": 0, "yindex": 1, "paths": [[[[0.0, -0.5], [0.13260155, -0.5], [0.25978993539242673, -0.44731684579412084], [0.3535533905932738, -0.3535533905932738], [0.44731684579412084, -0.25978993539242673], [0.5, -0.13260155], [0.5, 0.0], [0.5, 0.13260155], [0.44731684579412084, 0.25978993539242673], [0.3535533905932738, 0.3535533905932738], [0.25978993539242673, 0.44731684579412084], [0.13260155, 0.5], [0.0, 0.5], [-0.13260155, 0.5], [-0.25978993539242673, 0.44731684579412084], [-0.3535533905932738, 0.3535533905932738], [-0.44731684579412084, 0.25978993539242673], [-0.5, 0.13260155], [-0.5, 0.0], [-0.5, -0.13260155], [-0.44731684579412084, -0.25978993539242673], [-0.3535533905932738, -0.3535533905932738], [-0.25978993539242673, -0.44731684579412084], [-0.13260155, -0.5], [0.0, -0.5]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]]], "pathtransforms": [[13.88888888888889, 0.0, 0.0, 13.88888888888889, 0.0, 0.0]], "alphas": [0.6], "edgecolors": ["rgba(31, 119, 180, 0.6)"], "facecolors": ["rgba(31, 119, 180, 0.6)"], "edgewidths": [1.0], "offsetcoordinates": "data", "pathcoordinates": "display", "zorder": 1, "id": "el96521365268009312"}], "images": [], "sharex": [], "sharey": []}], "data": {"data01": [[36000.0, 19.0], [36050.0, 18.0], [36100.0, 17.0], [36150.0, 17.0], [36200.0, 16.0], [36250.0, 16.0], [36300.0, 15.0], [36350.0, 15.0], [36400.0, 14.0], [36450.0, 13.0], [36500.0, 13.0], [36550.0, 12.0], [36600.0, 12.0], [36650.0, 11.0], [36700.0, 11.0], [36750.0, 10.0], [36800.0, 9.0], [36850.0, 9.0], [36900.0, 8.0], [36950.0, 8.0], [37000.0, 7.0], [37050.0, 7.0], [37100.0, 6.0], [37150.0, 5.0], [37200.0, 5.0], [37250.0, 4.0], [37300.0, 4.0], [37350.0, 3.0], [37400.0, 3.0], [37450.0, 2.0], [37500.0, 0.0], [37550.0, 0.0], [37600.0, 0.0], [37650.0, 0.0], [37700.0, 0.0], [37750.0, 0.0], [37800.0, 0.0], [37850.0, 0.0], [37900.0, 0.0], [37950.0, 0.0], [38000.0, 0.0], [38050.0, 0.0], [38100.0, 0.0], [38150.0, 0.0], [38200.0, 0.0], [38250.0, 0.0], [38300.0, 0.0], [38350.0, 0.0], [38400.0, 0.0], [38450.0, 0.0]], "data02": [[0.8244982078853047, 0.9596560846560848], [0.8424193548387097, 0.9596560846560848], [0.8603405017921147, 0.9596560846560848]], "data03": [[0.8209139784946238, 0.9306156806156807], [0.9874551971326165, 0.9306156806156807], [0.9910394265232975, 0.9306156806156807], [0.9910394265232975, 0.9366281866281867], [0.9910394265232975, 0.9789562289562288], [0.9910394265232975, 0.984968734968735], [0.9874551971326165, 0.984968734968735], [0.8209139784946238, 0.984968734968735], [0.8173297491039426, 0.984968734968735], [0.8173297491039426, 0.9789562289562288], [0.8173297491039426, 0.9366281866281867], [0.8173297491039426, 0.9306156806156807], [0.8209139784946238, 0.9306156806156807]]}, "id": "el96521365263293696", "plugins": [{"type": "reset"}, {"type": "zoom", "button": true, "enabled": false}, {"type": "boxzoom", "button": true, "enabled": false}, {"type": "htmltooltip", "id": "el96521365268009312", "labels": ["<strong>Huurtoeslag</strong><br>Inkomen: 36000<br>Toeslag: 19", "<strong>Huurtoeslag</strong><br>Inkomen: 36050<br>Toeslag: 18", "<strong>Huurtoeslag</strong><br>Inkomen: 36100<br>Toeslag: 17", "<strong>Huurtoeslag</strong><br>Inkomen: 36150<br>Toeslag: 17", "<strong>Huurtoeslag</strong><br>Inkomen: 36200<br>Toeslag: 16", "<strong>Huurtoeslag</strong><br>Inkomen: 36250<br>Toeslag: 16", "<strong>Huurtoeslag</strong><br>Inkomen: 36300<br>Toeslag: 15", "<strong>Huurtoeslag</strong><br>Inkomen: 36350<br>Toeslag: 15", "<strong>Huurtoeslag</strong><br>Inkomen: 36400<br>Toeslag: 14", "<strong>Huurtoeslag</strong><br>Inkomen: 36450<br>Toeslag: 13", "<strong>Huurtoeslag</strong><br>Inkomen: 36500<br>Toeslag: 13", "<strong>Huurtoeslag</strong><br>Inkomen: 36550<br>Toeslag: 12", "<strong>Huurtoeslag</strong><br>Inkomen: 36600<br>Toeslag: 12", "<strong>Huurtoeslag</strong><br>Inkomen: 36650<br>Toeslag: 11", "<strong>Huurtoeslag</strong><br>Inkomen: 36700<br>Toeslag: 11", "<strong>Huurtoeslag</strong><br>Inkomen: 36750<br>Toeslag: 10", "<strong>Huurtoeslag</strong><br>Inkomen: 36800<br>Toeslag: 9", "<strong>Huurtoeslag</strong><br>Inkomen: 36850<br>Toeslag: 9", "<strong>Huurtoeslag</strong><br>Inkomen: 36900<br>Toeslag: 8", "<strong>Huurtoeslag</strong><br>Inkomen: 36950<br>Toeslag: 8", "<strong>Huurtoeslag</strong><br>Inkomen: 37000<br>Toeslag: 7", "<strong>Huurtoeslag</strong><br>Inkomen: 37050<br>Toeslag: 7", "<strong>Huurtoeslag</strong><br>Inkomen: 37100<br>Toeslag: 6", "<strong>Huurtoeslag</strong><br>Inkomen: 37150<br>Toeslag: 5", "<strong>Huurtoeslag</strong><br>Inkomen: 37200<br>Toeslag: 5", "<strong>Huurtoeslag</strong><br>Inkomen: 37250<br>Toeslag: 4", "<strong>Huurtoeslag</strong><br>Inkomen: 37300<br>Toeslag: 4", "<strong>Huurtoeslag</strong><br>Inkomen: 37350<br>Toeslag: 3", "<strong>Huurtoeslag</strong><br>Inkomen: 37400<br>Toeslag: 3", "<strong>Huurtoeslag</strong><br>Inkomen: 37450<br>Toeslag: 2", "<strong>Huurtoeslag</strong><br>Inkomen: 37500<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37550<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37600<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37650<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37700<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37750<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37800<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37850<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37900<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 37950<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38000<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38050<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38100<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38150<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38200<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38250<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38300<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38350<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38400<br>Toeslag: 0", "<strong>Huurtoeslag</strong><br>Inkomen: 38450<br>Toeslag: 0"], "targets": null, "hoffset": 10, "voffset": 10}]});
+            })
+         });
+}
+</script>
