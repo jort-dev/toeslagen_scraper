@@ -1,19 +1,17 @@
 import asyncio
 import os
 import re
-import sys
 import tkinter as tk
 import webbrowser
 from datetime import datetime
 from idlelib.tooltip import Hovertip
-from threading import Thread, Event
-from tkinter import messagebox, filedialog
+from threading import Thread
+from tkinter import filedialog
 
 from playwright.async_api import async_playwright, expect
 
 from test.test_gegevens import vul_test_gegevens_in
 
-stapgrootte = 50
 is_paused = False
 is_stopped = False
 
@@ -89,22 +87,17 @@ def vraag_csv_bestand():
         print(f"Niks gekozen")
 
 
-# Function to validate and update stapgrootte
-def update_stapgrootte(event):
-    global stapgrootte
+def validate_input(new_value):
+    if new_value == '':
+        return True  # allow empty string for easier editing
     try:
-        value = int(stapgrootte_entry.get())
+        value = int(new_value)
         if 1 <= value <= 1000:
-            stapgrootte = value
-            print(f"De stapgrootte is aangepast naar {stapgrootte}")
+            return True
         else:
-            messagebox.showwarning("Ongeldige waarde", "De stapgrootte moet tussen 1 en 1000 zijn")
-            stapgrootte_entry.delete(0, tk.END)
+            return False
     except ValueError:
-        messagebox.showwarning("Invalid Input", "Voer een geldig nummer in")
-        stapgrootte_entry.delete(0, tk.END)
-
-    stapgrootte_entry.insert(0, str(stapgrootte))
+        return False
 
 
 async def run_playwright():
@@ -115,13 +108,15 @@ async def run_playwright():
         page.set_default_timeout(0)  # Disable timeout
 
         print("Website laden")
-        await page.goto(
-            'https://www.belastingdienst.nl/wps/wcm/connect/nl/toeslagen/content/hulpmiddel-proefberekening-toeslagen')
+        await page.goto('https://www.belastingdienst.nl/wps/wcm/connect/nl/toeslagen/content/hulpmiddel-proefberekening-toeslagen')
 
-        await vul_test_gegevens_in(page)  # TEST
+        if str(demo_checkbox_var.get()) == "1":
+            await vul_test_gegevens_in(page)  # TEST
 
-        print(f"Het script start wanneer je op 'Toon resultaten' drukt")
         button = page.locator("#butResults_pbt")
+        print(f"Wachten tot de 'Toon resultaten' knop tevoorschijn komt. Vul je gegevens in")
+        await button.wait_for(timeout=0)
+        print(f"Het script start wanneer je op 'Toon resultaten' drukt")
         await expect(button).to_be_hidden(timeout=0)
 
         schrijf_resultaten(csv_bestand, "inkomen", "huurtoeslag", "zorgtoeslag", "kinderopvangtoeslag",
@@ -150,17 +145,23 @@ async def run_playwright():
             plot_new_button.config(state=tk.NORMAL)
 
             # schrijf resultaten weg
-            print(
-                f"{inkomen=}: {zorgtoeslag=}, {huurtoeslag=}, {kinderopvangtoeslag=}, {kindergebonden_budget=}")
-            schrijf_resultaten(csv_bestand, inkomen, zorgtoeslag, huurtoeslag, kinderopvangtoeslag,
-                               kindergebonden_budget)
+            print(f"{inkomen=}: {zorgtoeslag=}, {huurtoeslag=}, {kinderopvangtoeslag=}, {kindergebonden_budget=}")
+            schrijf_resultaten(csv_bestand, inkomen, zorgtoeslag, huurtoeslag, kinderopvangtoeslag, kindergebonden_budget)
+
+            if zorgtoeslag == '0' and huurtoeslag == '0' and kinderopvangtoeslag == '0' and kindergebonden_budget == '0' and auto_stop_var.get() == 1:
+                print(f"Auto stop triggered!")
+                stop_process()
 
             # klik 'Wijzig invoer'
             locator = page.locator("#butWijzig_pbt")
             await locator.click()
 
             # voer een verhoogd inkomen in
-            inkomen += stapgrootte
+            stapgrootte = stapgrootte_spinbox.get()
+            if not stapgrootte:
+                stapgrootte = "1"
+            print(f"Stapgrootte {stapgrootte}")
+            inkomen += int(stapgrootte)
             locator = page.locator("#V3-10_pbt")
             inkomen = str(inkomen)
             await locator.fill(inkomen[:-1])
@@ -188,6 +189,7 @@ def start_process():
     start_button.config(state=tk.DISABLED)
     pause_button.config(state=tk.ACTIVE)
     stop_button.config(state=tk.ACTIVE)
+    demo_checkbox.config(state=tk.DISABLED)
     Thread(target=start_playwright).start()
 
 
@@ -233,7 +235,7 @@ root.geometry(f"{window_width}x{window_height}+{x}+{y}")
 # root.resizable(False, False)
 root.bind("<Escape>", on_escape)
 tooltip_delay = 200
-
+validate_cmd = root.register(validate_input)
 
 # Title label
 title_label = tk.Label(root, text="Toeslagenscraper", font=("Helvetica", 16, "bold"))
@@ -249,20 +251,33 @@ link.bind("<Button-1>", lambda e: open_github())
 explanation_label = tk.Label(root, text="1. Kies de stapgrootte\n2. Klik 'Start' om de calculator te openen\n3. Vul de calculator in\n4. Klik in de calculator op 'Toon resultaten' om het proces te starten!\n5. Klik 'Plot resultaten'", justify="left")
 explanation_label.pack(pady=10)
 
+# settings frame
+settings_frame = tk.Frame(root)
+settings_frame.pack(anchor="center")
+
 # Stapgrootte input
-stapgrootte_frame = tk.Frame(root)
+stapgrootte_frame = tk.Frame(settings_frame)
 stapgrootte_frame.pack(pady=5)
 
 stapgrootte_label = tk.Label(stapgrootte_frame, text="Stapgrootte: ")
 stapgrootte_label.grid(row=0, column=0)
 
-stapgrootte_entry = tk.Entry(stapgrootte_frame, width=10)
-stapgrootte_entry.grid(row=0, column=1)
-stapgrootte_entry.insert(0, "50")
-# stapgrootte_entry.bind("<FocusOut>", update_stapgrootte)
-stapgrootte_entry.bind("<KeyRelease>", update_stapgrootte)
+stapgrootte_var = tk.StringVar(value="50")
+stapgrootte_spinbox = tk.Spinbox(stapgrootte_frame, from_=1, to=1000, increment=1, textvariable=stapgrootte_var, validate='key', validatecommand=(validate_cmd, '%P'))
+stapgrootte_spinbox.grid(row=0, column=1)
+Hovertip(stapgrootte_spinbox, "Het script verhoogt steeds het inkomen met dit bedrag (Kies een waarde tussen 1-1000, tussentijds aanpasbaar)", hover_delay=tooltip_delay)
 
-Hovertip(stapgrootte_entry, "Het script verhoogt steeds het inkomen met dit bedrag (Kies een waarde tussen 1-1000, tussentijds aanpasbaar)", hover_delay=tooltip_delay)
+# auto stop mode
+auto_stop_var = tk.IntVar()
+auto_stop_checkbox = tk.Checkbutton(settings_frame, text="Stop automatisch", variable=auto_stop_var, anchor="w")
+auto_stop_checkbox.pack(anchor="w")
+Hovertip(auto_stop_checkbox, "Stop met het ophalen van toeslagen wanneer elke toeslag 0 is", hover_delay=tooltip_delay)
+
+# demo mode
+demo_checkbox_var = tk.IntVar(value=1)
+demo_checkbox = tk.Checkbutton(settings_frame, text="Demo", variable=demo_checkbox_var, anchor="w")
+demo_checkbox.pack(anchor="w")
+Hovertip(demo_checkbox, "Vul automatisch test gegevens in voor demonstratie van deze tool", hover_delay=tooltip_delay)
 
 # Buttons frame
 control_buttons_frame = tk.Frame(root)
@@ -293,7 +308,6 @@ header_label = tk.Label(root, text="Resultaten", font=("Helvetica", 12, "bold"))
 header_label.pack(pady=(5, 0))  # Padding above and below the header
 relative_path = os.path.relpath(csv_bestand, os.getcwd())
 Hovertip(header_label, f"Onderstaande waardes worden weggeschreven naar {relative_path}", hover_delay=tooltip_delay)
-
 
 # write_path_var = tk.StringVar(value=f"Onderstaande waardes worden weggeschreven naar {relative_path}")
 # subtitle_label = tk.Label(root, textvariable=write_path_var, font=("Helvetica", 10, "italic"))
