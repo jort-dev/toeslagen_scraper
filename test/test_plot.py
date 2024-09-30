@@ -30,4 +30,4 @@ def plot_csv(filename):
     plt.savefig(png_filename)
     mpld3.show()
     # plt.close()
-plot_csv("toeslagen_20240926_205056.csv")
+plot_csv("toeslagen2.csv")
