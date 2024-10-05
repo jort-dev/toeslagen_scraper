@@ -1,33 +1,55 @@
-import os
 import pandas as pd
-import matplotlib.pyplot as plt
-import mpld3
-from mpld3 import plugins
+import plotly.graph_objects as go
 
+# Read the CSV file
+df = pd.read_csv('toeslagen_c.csv')
 
-def plot_csv(filename):
-    # Load the CSV file into a DataFrame
-    df = pd.read_csv(filename)
+# Extract the 'inkomen' column for the x-axis
+x = df['inkomen']
 
-    # Extract the base name of the input file without extension
-    base_name = os.path.splitext(os.path.basename(filename))[0]
+# Create the figure
+fig = go.Figure()
 
-    # Identify columns to plot (exclude columns with only zeros)
-    columns_to_plot = [col for col in df.columns if col != 'inkomen' and df[col].any()]
+# Add traces for each toeslag
+fig.add_trace(go.Scatter(
+    x=x,
+    y=df['huurtoeslag'],
+    mode='lines+markers',
+    name='Huurtoeslag',
+    hovertemplate='€%{y}'
+))
 
-    # Create a static plot using matplotlib
-    plt.figure(figsize=(10, 6))
-    for col in columns_to_plot:
-        plt.plot(df['inkomen'], df[col], label=col.capitalize())
-    plt.xlabel('Inkomen')
-    plt.ylabel('Toeslag')
-    plt.title('Toeslagen vs Inkomen')
-    plt.legend()
-    plt.grid(True)
+fig.add_trace(go.Scatter(
+    x=x,
+    y=df['zorgtoeslag'],
+    mode='lines+markers',
+    name='Zorgtoeslag',
+    hovertemplate='€%{y}'
+))
 
-    # Save the static plot as PNG
-    png_filename = f"{base_name}_plot.png"
-    plt.savefig(png_filename)
-    mpld3.show()
-    # plt.close()
-plot_csv("toeslagen2.csv")
+fig.add_trace(go.Scatter(
+    x=x,
+    y=df['kinderopvangtoeslag'],
+    mode='lines+markers',
+    name='Kinderopvangtoeslag',
+    hovertemplate='€%{y}'
+))
+
+fig.add_trace(go.Scatter(
+    x=x,
+    y=df['kindergevonden_budget'],
+    mode='lines+markers',
+    name='Kindergevonden Budget',
+    hovertemplate='€%{y}',
+))
+
+# Customize the layout
+fig.update_layout(
+    title='Toeslagen vs Inkomen',
+    xaxis_title='Inkomen (€)',
+    yaxis_title='Toeslag (€)',
+    hovermode='x unified',
+)
+
+# Display the figure
+fig.show()
