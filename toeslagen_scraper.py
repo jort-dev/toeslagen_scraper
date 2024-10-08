@@ -21,6 +21,8 @@ csv_bestand_folder = os.path.join(os.getcwd(), 'resultaten')
 csv_bestand = os.path.join(csv_bestand_folder, f"toeslagen_{timestamp}.csv")
 os.makedirs(csv_bestand_folder, exist_ok=True)  # maak resultaat folder aan als het nog niet bestaat
 
+geschreven_regels = []  # houd de geschreven toeslagen bij, voor autostop
+
 
 def get_toeslag(results, tag):
     for str in results:
@@ -30,11 +32,11 @@ def get_toeslag(results, tag):
         match = re.search(pattern, str)
         if not match:
             continue
-        if "geen" in str: # anders matched zoiets: 'U kunt geen zorgtoeslag krijgen omdat uw inkomen hoger is dan € 37.496.'
+        if "geen" in str:  # anders matched zoiets: 'U kunt geen zorgtoeslag krijgen omdat uw inkomen hoger is dan € 37.496.'
             continue
         extracted_number = match.group(1)
-        return extracted_number
-    return "0"
+        return int(extracted_number)
+    return 0
 
 
 async def get_toeslagen(page):
@@ -56,15 +58,17 @@ async def get_inkomen(page):
     return int(inkomen)
 
 
-def schrijf_resultaten(filename, inkomen, huurtoeslag, zorgtoeslag, kinderopvangtoeslag, kindergevonden_budget):
+def schrijf_resultaten(filename, inkomen, huurtoeslag, zorgtoeslag, kinderopvangtoeslag, kindergevonden_budget, totaal, besteedbaar):
     with open(filename, "a") as file:
-        line = f"{inkomen},{huurtoeslag},{zorgtoeslag},{kinderopvangtoeslag},{kindergevonden_budget}"
+        line = f"{inkomen},{huurtoeslag},{zorgtoeslag},{kinderopvangtoeslag},{kindergevonden_budget},{totaal},{besteedbaar}"
         file.write(line + "\n")
     inkomen_var.set(str(inkomen))
     zorgtoeslag_var.set(str(zorgtoeslag))
     huurtoeslag_var.set(str(huurtoeslag))
     kinderopvangtoeslag_var.set(str(kinderopvangtoeslag))
     kindergebonden_budget_var.set(str(kindergevonden_budget))
+    besteedbaar_var.set(str(besteedbaar))
+    totaal_var.set(str(totaal))
 
 
 def plot_resultaten(from_path, to_path):
@@ -124,7 +128,7 @@ async def run_playwright():
         await expect(button).to_be_hidden(timeout=0)
 
         schrijf_resultaten(csv_bestand, "inkomen", "huurtoeslag", "zorgtoeslag", "kinderopvangtoeslag",
-                           "kindergevonden_budget")
+                           "kindergevonden_budget", "totaal", "besteedbaar")
         relative_path = os.path.relpath(csv_bestand, os.getcwd())
         print(f"Gestart! Resultaten worden geschreven naar {relative_path}")
 
@@ -144,13 +148,26 @@ async def run_playwright():
             huurtoeslag = get_toeslag(toeslagen_text, "huurtoeslag")
             kinderopvangtoeslag = get_toeslag(toeslagen_text, "kinderopvangtoeslag")
             kindergebonden_budget = get_toeslag(toeslagen_text, "kindgebonden budget")
+            totaal = zorgtoeslag + huurtoeslag + kinderopvangtoeslag + kindergebonden_budget
+            besteedbaar = inkomen / 12 + totaal
 
             plot_source.set(value=f"Plotten: {relative_path}")
             plot_new_button.config(state=tk.NORMAL)
 
+            te_schrijven = {
+                "inkomen": inkomen,
+                "zorgtoeslag": zorgtoeslag,
+                "huurtoeslag": huurtoeslag,
+                "kinderopvangtoeslag": kinderopvangtoeslag,
+                "kindergebonden_budget": kindergebonden_budget,
+                "totaal": totaal,
+                "besteedbaar": besteedbaar
+            }
+            geschreven_regels.append(te_schrijven)
+
             # schrijf resultaten weg
-            print(f"{inkomen=}: {zorgtoeslag=}, {huurtoeslag=}, {kinderopvangtoeslag=}, {kindergebonden_budget=}")
-            schrijf_resultaten(csv_bestand, inkomen, huurtoeslag, zorgtoeslag, kinderopvangtoeslag, kindergebonden_budget)
+            print(f"{inkomen=}: {zorgtoeslag=}, {huurtoeslag=}, {kinderopvangtoeslag=}, {kindergebonden_budget=}, {totaal=}, {besteedbaar=}")
+            schrijf_resultaten(csv_bestand, inkomen, huurtoeslag, zorgtoeslag, kinderopvangtoeslag, kindergebonden_budget, totaal, besteedbaar)
 
             if zorgtoeslag == '0' and huurtoeslag == '0' and kinderopvangtoeslag == '0' and kindergebonden_budget == '0' and auto_stop_var.get() == 1:
                 print(f"Auto stop triggered!")
@@ -325,12 +342,15 @@ demo_checkbox_var = tk.IntVar(value=0)
 demo_checkbox = tk.Checkbutton(settings_frame, text="Demo", variable=demo_checkbox_var, anchor="w")
 demo_checkbox.pack(anchor="w")
 Hovertip(demo_checkbox, "Vul automatisch test gegevens in voor demonstratie van deze tool", hover_delay=tooltip_delay)
+
+
 # demo mode vereist dat je kinderen hebt
 def on_checkbox_toggle(*args):
     if demo_checkbox_var.get() == 1:
         selected_option.set(kind_opties[1])
     else:
         selected_option.set(kind_opties[0])
+
 
 demo_checkbox_var.trace_add('write', on_checkbox_toggle)
 
@@ -376,12 +396,16 @@ zorgtoeslag_var = tk.StringVar(value=f"0")
 huurtoeslag_var = tk.StringVar(value=f"0")
 kinderopvangtoeslag_var = tk.StringVar(value=f"0")
 kindergebonden_budget_var = tk.StringVar(value=f"0")
+totaal_var = tk.StringVar(value=f"0")
+besteedbaar_var = tk.StringVar(value=f"0")
 labels = [
     ("Inkomen", inkomen_var),
     ("Zorgtoeslag", zorgtoeslag_var),
     ("Huurtoeslag", huurtoeslag_var),
     ("Kinderopvangtoeslag", kinderopvangtoeslag_var),
     ("Kindergebonden budget", kindergebonden_budget_var),
+    ("Totaal", totaal_var),
+    ("Besteedbaar per maand", besteedbaar_var),
 ]
 for i, (text, var) in enumerate(labels):  # chatgpt bro
     tk.Label(table_frame, text=text).grid(row=i, column=0, padx=10, pady=5, sticky="w")
